@@ -33,10 +33,10 @@ namespace TwentyFiveSlicer.Runtime
         private void Initialize()
         {
             // SliceDataMap ScriptableObject 로드
-            _sliceDataMap = Resources.Load<SliceDataMap>("SliceDataMap");
+            _sliceDataMap = SliceDataMap.Instance;
             if (_sliceDataMap == null)
             {
-                Debug.LogError("SliceDataMap not found. Please create and place it in the Resources folder. Its name should be 'SliceDataMap'.");
+                Debug.LogError("SliceDataMap not found. Please create a Slice Data Map asset and assign in the project settings under Project/TwentyFiveSlice");
             }
         }
 
