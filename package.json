@@ -21,7 +21,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kwan3854/TwentyFiveSlicer.git"
+    "url": "https://github.com/Korion-Interactive/TwentyFiveSlicer.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/@Korion-Interactive"
   },
   "license": "MIT"
 }
