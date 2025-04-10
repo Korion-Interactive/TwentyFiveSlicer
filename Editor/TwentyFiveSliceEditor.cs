@@ -21,7 +21,7 @@ namespace TwentyFiveSlicer.TFSEditor.Editor
         private float _zoomFactor = 1f;
         private bool _autoZoomApplied = false;
         private bool _recenterPending = false;
-
+        private string _currentGuid;
         private const float BaseCanvasSize = 2000f;
         private const float Margin = 50f;
 
@@ -94,6 +94,15 @@ namespace TwentyFiveSlicer.TFSEditor.Editor
                 GUILayout.Space(10);
                 CurrentSprite =
                     (Sprite)EditorGUILayout.ObjectField(CurrentSprite, typeof(Sprite), false, GUILayout.Width(200));
+                if(CurrentSprite != null)
+                {
+                    string path = AssetDatabase.GetAssetPath(CurrentSprite);
+                    _currentGuid = AssetDatabase.AssetPathToGUID(path);
+                }
+                else
+                {
+                    _currentGuid = null;
+                }
                 GUILayout.FlexibleSpace();
             }
             GUILayout.EndHorizontal();
@@ -108,7 +117,7 @@ namespace TwentyFiveSlicer.TFSEditor.Editor
         {
             if (!_bordersLoaded)
             {
-                _bordersLoaded = SliceDataManager.Instance.TryGetSliceData(CurrentSprite, out var sliceData);
+                _bordersLoaded = SliceDataManager.Instance.TryGetSliceData(_currentGuid, out var sliceData);
                 if (_bordersLoaded)
                 {
                     _verticalBorders = sliceData.verticalBorders;
@@ -702,7 +711,7 @@ namespace TwentyFiveSlicer.TFSEditor.Editor
                 verticalBorders = _verticalBorders,
                 horizontalBorders = _horizontalBorders
             };
-            SliceDataManager.Instance.SaveSliceData(CurrentSprite, sliceData);
+            SliceDataManager.Instance.SaveSliceData(_currentGuid, sliceData);
         }
     }
 }

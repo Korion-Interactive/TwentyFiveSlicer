@@ -45,10 +45,10 @@ namespace TwentyFiveSlicer.TFSEditor.Editor
             }
 
             // Collect sprites to remove
-            List<Sprite> spritesToRemove = new List<Sprite>();
+            List<string> spritesToRemove = new List<string>();
             foreach (var entry in allEntries)
             {
-                string spritePath = AssetDatabase.GetAssetPath(entry.Key);
+                string spritePath = AssetDatabase.GUIDToAssetPath(entry.Key);
                 if (!existingSpritePaths.Contains(spritePath)) // Check if the sprite exists in the project
                 {
                     Debug.LogWarning($"Sprite not found: {spritePath}");
