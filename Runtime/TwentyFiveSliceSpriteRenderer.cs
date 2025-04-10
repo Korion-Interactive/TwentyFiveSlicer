@@ -1,6 +1,9 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Serialization;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace TwentyFiveSlicer.Runtime
 {
@@ -63,6 +66,7 @@ namespace TwentyFiveSlicer.Runtime
         [FormerlySerializedAs("_sortingOrder")] [SerializeField]
         private int sortingOrder;
 
+        private string guid;
         //========================================================
         // Internal Fields
         //========================================================
@@ -99,6 +103,15 @@ namespace TwentyFiveSlicer.Runtime
         {
             // Called when inspector values change
             _needMeshUpdate = true;
+            if (sprite == null)
+            {
+                guid = null;
+            }
+            else
+            {
+                string path = AssetDatabase.GetAssetPath(sprite);
+                guid = AssetDatabase.AssetPathToGUID(path);
+            }
             UpdateRendererSettings();
         }
 
@@ -305,7 +318,7 @@ namespace TwentyFiveSlicer.Runtime
             mesh.Clear();
 
             // 1) Get 25-slice data from SliceDataManager
-            if (!SliceDataManager.Instance.TryGetSliceData(targetSprite, out var sliceData))
+            if (!SliceDataManager.Instance.TryGetSliceData(guid, out var sliceData))
             {
                 // If no slice data, just build a single quad
                 BuildSimpleQuad(mesh, targetSprite);

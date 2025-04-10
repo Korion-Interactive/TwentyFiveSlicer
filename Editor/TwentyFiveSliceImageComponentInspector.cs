@@ -14,6 +14,7 @@ namespace TwentyFiveSlicer.TFSEditor.Editor
         private SerializedProperty _spMaterial;
         private SerializedProperty _spRaycastTarget;
         private SerializedProperty _spRaycastPadding;
+        private SerializedProperty _spGuid;
 
         // From TwentyFiveSliceImage
         private SerializedProperty _spDebuggingView;
@@ -34,7 +35,7 @@ namespace TwentyFiveSlicer.TFSEditor.Editor
             _spMaterial       = serializedObject.FindProperty("m_Material");
             _spRaycastTarget  = serializedObject.FindProperty("m_RaycastTarget");
             _spRaycastPadding = serializedObject.FindProperty("m_RaycastPadding");
-
+            _spGuid = serializedObject.FindProperty("guid");
             // For the TwentyFiveSliceImage fields
             _spDebuggingView  = serializedObject.FindProperty("debuggingView"); 
         }
@@ -94,7 +95,7 @@ namespace TwentyFiveSlicer.TFSEditor.Editor
             Sprite spriteObj = _spSprite.objectReferenceValue as Sprite;
             if (spriteObj != null)
             {
-                if (!SliceDataManager.Instance.TryGetSliceData(spriteObj, out _))
+                if (!SliceDataManager.Instance.TryGetSliceData(_spGuid.stringValue, out _))
                 {
                     EditorGUILayout.HelpBox(NoSliceDataWarning, MessageType.Warning);
                 }

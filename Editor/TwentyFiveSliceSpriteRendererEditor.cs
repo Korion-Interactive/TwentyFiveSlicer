@@ -26,7 +26,8 @@ namespace TwentyFiveSlicer.TFSEditor.Editor
         private SerializedProperty _spSize;
         private SerializedProperty _spSortingLayerName;
         private SerializedProperty _spSortingOrder;
-        
+        private SerializedProperty _spGuid;
+
         // HelpBox message
         private const string NoSliceDataWarning = 
             "The selected sprite does not have 25-slice data. Please slice the sprite in Window -> 2D -> 25-Slice Editor.";
@@ -45,6 +46,7 @@ namespace TwentyFiveSlicer.TFSEditor.Editor
             _spSize             = serializedObject.FindProperty("size");
             _spSortingLayerName = serializedObject.FindProperty("sortingLayerName");
             _spSortingOrder     = serializedObject.FindProperty("sortingOrder");
+            _spGuid = serializedObject.FindProperty("guid");
         }
 
         public override void OnInspectorGUI()
@@ -78,7 +80,7 @@ namespace TwentyFiveSlicer.TFSEditor.Editor
             var spriteObj = _spSprite.objectReferenceValue as Sprite;
             if (spriteObj != null)
             {
-                if (!SliceDataManager.Instance.TryGetSliceData(spriteObj, out _))
+                if (!SliceDataManager.Instance.TryGetSliceData(_spGuid.stringValue, out _))
                 {
                     EditorGUILayout.HelpBox(NoSliceDataWarning, MessageType.Warning);
                 }

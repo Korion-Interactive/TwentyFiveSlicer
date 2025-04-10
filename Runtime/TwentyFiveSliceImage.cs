@@ -1,6 +1,9 @@
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 namespace TwentyFiveSlicer.Runtime
 {
@@ -29,6 +32,7 @@ namespace TwentyFiveSlicer.Runtime
         }
 
         [SerializeField] private bool debuggingView = false;
+        [SerializeField] private string guid;
         
         private readonly bool[] _fixedColumns = { true, false, true, false, true };
         private readonly bool[] _fixedRows = { true, false, true, false, true };
@@ -42,8 +46,9 @@ namespace TwentyFiveSlicer.Runtime
                 return;
             }
 
-            if (!SliceDataManager.Instance.TryGetSliceData(sprite, out var sliceData))
+            if (!SliceDataManager.Instance.TryGetSliceData(guid, out var sliceData))
             {
+                Debug.LogWarningFormat("Could not find slice data for sprite: {0}", guid);
                 base.OnPopulateMesh(vh);
                 return;
             }
@@ -215,5 +220,21 @@ namespace TwentyFiveSlicer.Runtime
             vh.AddTriangle(vertexIndex, vertexIndex + 1, vertexIndex + 2);
             vh.AddTriangle(vertexIndex, vertexIndex + 2, vertexIndex + 3);
         }
+
+#if UNITY_EDITOR
+        protected override void OnValidate()
+        {
+            base.OnValidate();
+            if (sprite == null)
+            {
+                guid = null;
+            }
+            else
+            {
+                string path = AssetDatabase.GetAssetPath(sprite);
+                guid = AssetDatabase.AssetPathToGUID(path);
+            }
+        }
+#endif
     }
 }

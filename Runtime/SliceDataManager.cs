@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using UnityEngine;
 
 [assembly: InternalsVisibleTo("TwentyFiveSlicer.Editor")]
@@ -40,7 +43,7 @@ namespace TwentyFiveSlicer.Runtime
             }
         }
 
-        public bool TryGetSliceData(Sprite sprite, out TwentyFiveSliceData data)
+        public bool TryGetSliceData(string guid, out TwentyFiveSliceData data)
         {
             if (_sliceDataMap == null)
             {
@@ -48,18 +51,19 @@ namespace TwentyFiveSlicer.Runtime
                 data = null;
                 return false;
             }
-            return _sliceDataMap.TryGetSliceData(sprite, out data);
+            return _sliceDataMap.TryGetSliceData(guid, out data);
         }
 
 #if UNITY_EDITOR
-        public void SaveSliceData(Sprite targetSprite, TwentyFiveSliceData sliceData)
+        public void SaveSliceData(string guid, TwentyFiveSliceData sliceData)
         {
             if (_sliceDataMap == null)
             {
                 Debug.LogError("SliceDataMap is not initialized.");
                 return;
             }
-            _sliceDataMap.AddSliceData(targetSprite, sliceData);
+
+            _sliceDataMap.AddSliceData(guid, sliceData);
             UnityEditor.EditorUtility.SetDirty(_sliceDataMap);
             UnityEditor.AssetDatabase.SaveAssets();
         }
@@ -69,18 +73,18 @@ namespace TwentyFiveSlicer.Runtime
             return _sliceDataMap != null;
         }
         
-        public IEnumerable<KeyValuePair<Sprite, TwentyFiveSliceData>> GetAllEntries()
+        public IEnumerable<KeyValuePair<string, TwentyFiveSliceData>> GetAllEntries()
         {
             if (_sliceDataMap == null)
             {
                 Debug.LogError("SliceDataMap is not initialized.");
-                return Enumerable.Empty<KeyValuePair<Sprite, TwentyFiveSliceData>>();
+                return Enumerable.Empty<KeyValuePair<string, TwentyFiveSliceData>>();
             }
 
             return _sliceDataMap.GetAllEntries();
         }
 
-        public void RemoveSliceData(Sprite sprite)
+        public void RemoveSliceData(string guid)
         {
             if (_sliceDataMap == null)
             {
@@ -88,7 +92,7 @@ namespace TwentyFiveSlicer.Runtime
                 return;
             }
 
-            _sliceDataMap.RemoveSliceData(sprite);
+            _sliceDataMap.RemoveSliceData(guid);
             UnityEditor.EditorUtility.SetDirty(_sliceDataMap);
             UnityEditor.AssetDatabase.SaveAssets();
         }

@@ -10,7 +10,7 @@ namespace TwentyFiveSlicer.Runtime
         public const string DataMapName = "com.kwanjoong.twentyfiveslicer";
 
         [SerializeField]
-        private SerializedDictionary<Sprite, TwentyFiveSliceData> sliceDataMap = new();
+        private SerializedDictionary<string, TwentyFiveSliceData> sliceDataMap = new();
 
         private static SliceDataMap s_Instance;
 
@@ -59,27 +59,35 @@ namespace TwentyFiveSlicer.Runtime
                 s_Instance = this;
         }
 
-        public bool TryGetSliceData(Sprite sprite, out TwentyFiveSliceData data)
+
+        public bool TryGetSliceData(string guid, out TwentyFiveSliceData data)
         {
-            return sliceDataMap.TryGetValue(sprite, out data);
+            if (string.IsNullOrEmpty(guid))
+            {
+                Debug.LogErrorFormat("Failed to get SliceData because guid was null or empty!");
+                data = null;
+                return false;
+            }
+
+            return sliceDataMap.TryGetValue(guid, out data);
         }
 
-        public void AddSliceData(Sprite sprite, TwentyFiveSliceData data)
+        public void AddSliceData(string guid, TwentyFiveSliceData data)
         {
-            sliceDataMap.Add(sprite, data);
+            sliceDataMap.Add(guid, data);
         }
 
-        public void RemoveSliceData(Sprite sprite)
+        public void RemoveSliceData(string guid)
         {
-            sliceDataMap.Remove(sprite);
+            sliceDataMap.Remove(guid);
         }
 
-        public IEnumerable<Sprite> GetAllSprites()
+        public IEnumerable<string> GetAllSprites()
         {
             return sliceDataMap.Keys;
         }
         
-        public IEnumerable<KeyValuePair<Sprite, TwentyFiveSliceData>> GetAllEntries()
+        public IEnumerable<KeyValuePair<string, TwentyFiveSliceData>> GetAllEntries()
         {
             return sliceDataMap.GetAllEntries();
         }
