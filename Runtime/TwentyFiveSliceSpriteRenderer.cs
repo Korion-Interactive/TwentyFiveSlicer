@@ -98,7 +98,7 @@ namespace TwentyFiveSlicer.Runtime
             UpdateRendererSettings();
             RebuildMeshIfNeeded();
         }
-
+#if UNITY_EDITOR
         private void OnValidate()
         {
             // Called when inspector values change
@@ -114,6 +114,7 @@ namespace TwentyFiveSlicer.Runtime
             }
             UpdateRendererSettings();
         }
+#endif
 
         private void Update()
         {
